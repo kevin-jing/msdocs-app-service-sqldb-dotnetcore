@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DotNetCoreSqlDb.Data;
+﻿using DotNetCoreSqlDb.Data;
 using DotNetCoreSqlDb.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -27,6 +28,12 @@ namespace DotNetCoreSqlDb.Controllers
         // The cache logic is added with the help of GitHub Copilot
         public async Task<IActionResult> Index()
         {
+            foreach (var header in Request.Headers)
+            {
+                _logger.LogInformation("Key: " + header.Key);
+                _logger.LogInformation("Value: " + header.Value);
+            }
+
             var todoItems = await _cache.GetAsync(_TodoItemsCacheKey);
             if (todoItems != null)
             {
